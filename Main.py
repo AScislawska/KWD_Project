@@ -1,10 +1,10 @@
 # 1. Uczenie liniowej hipotezy dla problemu przewidywania cen nieruchomości (Housing Data)
 
-from sklearn.datasets import load_boston
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
-from sklearn import linear_model
+from sklearn import linear_model, datasets
 
 boston = load_boston()
 
@@ -12,7 +12,6 @@ features = boston.feature_names
 print(features)
 print(len(features))
 print('-----------------')
-print(boston.data)
 
 print(len(boston.data))
 invalid_rows = dict()
@@ -42,13 +41,13 @@ for idx, name in enumerate(features):
     boston_x = boston_x[:, np.newaxis]
 
     boston_x_train, boston_x_test, boston_y_train, boston_y_test = \
-        train_test_split(boston_x, boston.target, test_size=0.2)
+        train_test_split(boston_x, boston.target, test_size=0.3)
 
     plt.figure(idx)
     plt.subplot('221')
     plt.scatter(boston_x_train, boston_y_train)
     plt.title('Training dataset ' + name)
-    plt.xlabel('x')
+    plt.xlabel('x'+str(idx))
     plt.ylabel('target')
     plt.grid()
 
@@ -89,5 +88,27 @@ for idx, name in enumerate(features):
     print('r2: %.2f' % r_squared)
     r_squared_list.append(r_squared)
 
-print(r_squared_list)
+
+print('coefficients for separate '+r_squared_list)
+print('-----------------')
+from sklearn.metrics import mean_squared_error, r2_score
+
+# regression trained with all features
+all_features = boston.data
+all_features_target = boston.target
+
+all_features_train, all_features_test, all_features_target_train, all_features_target_test = train_test_split(
+    all_features, all_features_target, train_size=0.3)
+
+linear_regression_model = linear_model.LinearRegression()
+linear_regression_model.fit(all_features_train, all_features_target_train)
+
+predicts = linear_regression_model.predict(all_features_test)
+
+print("coefficients of all features regression:", linear_regression_model.coef_)
+
+print("Mean error over test data: %.2f" % mean_squared_error(all_features_target_test, predicts))
+print("R2  test data: %.2f" % r2_score(all_features_target_test, predicts))
+print('-----------------')
+
 plt.show()
