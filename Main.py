@@ -89,7 +89,7 @@ for idx, name in enumerate(features):
     r_squared_list.append(r_squared)
 
 
-print('coefficients for separate '+r_squared_list)
+print('coefficients for separate ',r_squared_list)
 print('-----------------')
 from sklearn.metrics import mean_squared_error, r2_score
 
