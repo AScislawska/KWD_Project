@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
 from sklearn import linear_model, datasets
+from sklearn.metrics import mean_squared_error, r2_score
 
 boston = load_boston()
 
@@ -41,13 +42,13 @@ for idx, name in enumerate(features):
     boston_x = boston_x[:, np.newaxis]
 
     boston_x_train, boston_x_test, boston_y_train, boston_y_test = \
-        train_test_split(boston_x, boston.target, test_size=0.3)
+        train_test_split(boston_x, boston.target, test_size=0.1)
 
     plt.figure(idx)
     plt.subplot('221')
     plt.scatter(boston_x_train, boston_y_train)
     plt.title('Training dataset ' + name)
-    plt.xlabel('x'+str(idx))
+    plt.xlabel('x' + str(idx))
     plt.ylabel('target')
     plt.grid()
 
@@ -63,8 +64,7 @@ for idx, name in enumerate(features):
 
     plt.subplot('223')
     plt.scatter(boston_x_train, boston_y_train)
-    plt.plot(boston_x_train, regr.predict(boston_x_train), color='green',
-             linewidth=3)
+    plt.plot(boston_x_train, regr.predict(boston_x_train), color='green', linewidth=3)
     plt.title('Learned linear regression - train set')
     plt.xlabel('x' + str(idx))
     plt.ylabel('target')
@@ -80,16 +80,13 @@ for idx, name in enumerate(features):
     plt.tight_layout()
     plt.grid()
 
-    from sklearn.metrics import mean_squared_error, r2_score
-
     print('Coefficients: \n', regr.coef_)
     print("Mean squared error: %.2f" % mean_squared_error(boston_y_test, regr.predict(boston_x_test)))
     r_squared = r2_score(boston_y_test, regr.predict(boston_x_test))
     print('r2: %.2f' % r_squared)
     r_squared_list.append(r_squared)
 
-
-print('coefficients for separate ',r_squared_list)
+print('r_quared for separate ', r_squared_list)
 print('-----------------')
 from sklearn.metrics import mean_squared_error, r2_score
 
@@ -98,7 +95,7 @@ all_features = boston.data
 all_features_target = boston.target
 
 all_features_train, all_features_test, all_features_target_train, all_features_target_test = train_test_split(
-    all_features, all_features_target, train_size=0.3)
+    all_features, all_features_target, train_size=0.1)
 
 linear_regression_model = linear_model.LinearRegression()
 linear_regression_model.fit(all_features_train, all_features_target_train)
