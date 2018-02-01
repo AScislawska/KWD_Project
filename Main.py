@@ -42,8 +42,9 @@ for idx, name in enumerate(features):
     boston_x = boston_x[:, np.newaxis]
 
     boston_x_train, boston_x_test, boston_y_train, boston_y_test = \
-        train_test_split(boston_x, boston.target, test_size=0.1)
-
+        train_test_split(boston_x, boston.target, train_size=0.1)
+    print("boston_x_train size ",len(boston_x_train))
+    print("boston_x_test size", len(boston_x_test))
     plt.figure(idx)
     plt.subplot('221')
     plt.scatter(boston_x_train, boston_y_train)
