@@ -8,7 +8,7 @@ from sklearn import linear_model, datasets
 from sklearn.metrics import mean_squared_error, r2_score
 
 boston = load_boston()
-
+print (boston.DESCR)
 features = boston.feature_names
 print(features)
 print(len(features))
