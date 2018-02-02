@@ -95,9 +95,9 @@ for idx, name in enumerate(features):
     plt.grid()
 
     print('Coefficient: ', regr.coef_, ' intercept: ', regr.intercept_)
-    print('Mean squared error: %.2f' % mean_squared_error(boston_y_test, regr.predict(boston_x_test)))
+    print('Mean squared error: %.4f' % mean_squared_error(boston_y_test, regr.predict(boston_x_test)))
     r_squared = r2_score(boston_y_test, regr.predict(boston_x_test))
-    print('r2: %.2f' % r_squared)
+    print('r2: %.4f' % r_squared)
     r_squared_list.append(r_squared)
 
 print('r_squared for separate features: ', r_squared_list)
@@ -114,33 +114,44 @@ predicts = linear_regression_model.predict(all_features_test)
 
 print('coefficients of all features regression:', linear_regression_model.coef_)
 
-print('Mean error over test data: %.2f' % mean_squared_error(all_features_target_test, predicts))
-print('R2  test data: %.2f' % r2_score(all_features_target_test, predicts))
+print('Mean error over test data: %.4f' % mean_squared_error(all_features_target_test, predicts))
+print('R2  test data: %.4f' % r2_score(all_features_target_test, predicts))
 print('-----------------')
 
 # Ridge regression
 data = datasets.load_boston()
 
-data_scaled = data.data
-data_train, data_test, target_train, target_test = train_test_split(data_scaled, data.target, train_size=0.1)
+data_train, data_test, target_train, target_test = train_test_split(data.data, data.target, train_size=0.1)
 
-classifier = linear_model.Ridge(alpha=0.2)
-classifier.fit(data_train, target_train)
+ridge = linear_model.Ridge(alpha=0.2)
+ridge.fit(data_train, target_train)
 
-predicted = classifier.predict(data_test)
+predicted = ridge.predict(data_test)
 
-print('Mean error over test data: %.2f' % mean_squared_error(target_test, predicts))
-print('R2  test data: %.2f' % r2_score(target_test, predicted))
-
+print('Ridge')
+print('Mean error over test data: %.4f' % mean_squared_error(target_test, predicts))
+print('R2  test data: %.4f' % r2_score(target_test, predicted))
 
 from sklearn.linear_model import SGDRegressor
 from sklearn.model_selection import cross_val_score
 
-regressor = SGDRegressor(loss='squared_loss', max_iter=1000, tol=0.001,alpha=0.01)
-scores = cross_val_score(regressor, all_features_train, all_features_target_train, cv=5)
+lstat_data=all_features[:, 12];
+lstat_data=lstat_data.reshape(-1,1)
+
+regressor_x_train, regressor_x_test, regressor_target_train, regressor_target_test = train_test_split(
+    lstat_data, data.target, train_size=0.80)
+
+regressor = SGDRegressor(loss='squared_loss', max_iter=1000, tol=0.001, alpha=0.01)
+scores = cross_val_score(regressor, regressor_x_train, regressor_target_train, cv=5)
+regressor.fit(regressor_x_train, regressor_target_train)
+
+predicted_lstat=regressor.predict(regressor_x_test)
+
+print('-----------------')
+print('SGDRegressor - last feature')
 print('Cross validation r-squared scores: ', scores)
 print('Average cross validation r-squared score: ', np.mean(scores))
-regressor.fit(all_features_train, all_features_target_train)
-print('Test set r-squared score ', regressor.score(all_features_test, all_features_target_test))
+print('Test set r-squared score ', regressor.score(regressor_x_test, regressor_target_test))
+print('R2  test data: %.4f' % r2_score(regressor_target_test, predicted_lstat))
 
 plt.show()
