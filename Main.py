@@ -8,7 +8,7 @@ from sklearn import linear_model, datasets
 from sklearn.metrics import mean_squared_error, r2_score
 
 boston = load_boston()
-print (boston.DESCR)
+print(boston.DESCR)
 features = boston.feature_names
 print(features)
 print(len(features))
@@ -118,13 +118,29 @@ print('Mean error over test data: %.2f' % mean_squared_error(all_features_target
 print('R2  test data: %.2f' % r2_score(all_features_target_test, predicts))
 print('-----------------')
 
-#plt.show()
-from sklearn.preprocessing import StandardScaler
+# Ridge regression
+data = datasets.load_boston()
+
+data_scaled = data.data
+data_train, data_test, target_train, target_test = train_test_split(data_scaled, data.target, train_size=0.1)
+
+classifier = linear_model.Ridge(alpha=0.2)
+classifier.fit(data_train, target_train)
+
+predicted = classifier.predict(data_test)
+
+print('Mean error over test data: %.2f' % mean_squared_error(target_test, predicts))
+print('R2  test data: %.2f' % r2_score(target_test, predicted))
+
+
 from sklearn.linear_model import SGDRegressor
-from sklearn.cross_validation import cross_val_score
-regressor= SGDRegressor(loss='squared_loss')
-scores=cross_val_score(regressor, all_features_train, all_features_target_train, cv=5)
-print ('Cross validation r-squared scores: ', scores)
-print ('Average cross validation r-squared score: ', np.mean(scores))
+from sklearn.model_selection import cross_val_score
+
+regressor = SGDRegressor(loss='squared_loss', max_iter=1000, tol=0.001,alpha=0.01)
+scores = cross_val_score(regressor, all_features_train, all_features_target_train, cv=5)
+print('Cross validation r-squared scores: ', scores)
+print('Average cross validation r-squared score: ', np.mean(scores))
 regressor.fit(all_features_train, all_features_target_train)
-print ('Test set r-squared score ', regressor.score(all_features_test, all_features_target_test))
+print('Test set r-squared score ', regressor.score(all_features_test, all_features_target_test))
+
+plt.show()
