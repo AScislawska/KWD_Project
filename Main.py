@@ -118,4 +118,13 @@ print('Mean error over test data: %.2f' % mean_squared_error(all_features_target
 print('R2  test data: %.2f' % r2_score(all_features_target_test, predicts))
 print('-----------------')
 
-plt.show()
+#plt.show()
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import SGDRegressor
+from sklearn.cross_validation import cross_val_score
+regressor= SGDRegressor(loss='squared_loss')
+scores=cross_val_score(regressor, all_features_train, all_features_target_train, cv=5)
+print ('Cross validation r-squared scores: ', scores)
+print ('Average cross validation r-squared score: ', np.mean(scores))
+regressor.fit(all_features_train, all_features_target_train)
+print ('Test set r-squared score ', regressor.score(all_features_test, all_features_target_test))
