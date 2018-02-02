@@ -33,7 +33,6 @@ print(len(boston.target))
 
 print('-----------------')
 print(boston.keys())
-print("let's do this")
 
 r_squared_list = []
 
@@ -57,8 +56,8 @@ for idx, name in enumerate(features):
     boston_y_train = all_features_target_train
     boston_y_test = all_features_target_test
 
-    print("boston_x_train size ", len(boston_x_train))
-    print("boston_x_test size", len(boston_x_test))
+    print('boston_x_train size ', len(boston_x_train))
+    print('boston_x_test size', len(boston_x_test))
     plt.figure(idx)
     plt.subplot('221')
     plt.scatter(boston_x_train, boston_y_train)
@@ -95,8 +94,8 @@ for idx, name in enumerate(features):
     plt.tight_layout()
     plt.grid()
 
-    print('Coefficients: \n', regr.coef_)
-    print("Mean squared error: %.2f" % mean_squared_error(boston_y_test, regr.predict(boston_x_test)))
+    print('Coefficient: ', regr.coef_, ' intercept: ', regr.intercept_)
+    print('Mean squared error: %.2f' % mean_squared_error(boston_y_test, regr.predict(boston_x_test)))
     r_squared = r2_score(boston_y_test, regr.predict(boston_x_test))
     print('r2: %.2f' % r_squared)
     r_squared_list.append(r_squared)
@@ -113,10 +112,10 @@ linear_regression_model.fit(all_features_train, all_features_target_train)
 
 predicts = linear_regression_model.predict(all_features_test)
 
-print("coefficients of all features regression:", linear_regression_model.coef_)
+print('coefficients of all features regression:', linear_regression_model.coef_)
 
-print("Mean error over test data: %.2f" % mean_squared_error(all_features_target_test, predicts))
-print("R2  test data: %.2f" % r2_score(all_features_target_test, predicts))
+print('Mean error over test data: %.2f' % mean_squared_error(all_features_target_test, predicts))
+print('R2  test data: %.2f' % r2_score(all_features_target_test, predicts))
 print('-----------------')
 
 plt.show()
