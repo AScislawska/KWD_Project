@@ -36,14 +36,28 @@ print(boston.keys())
 print("let's do this")
 
 r_squared_list = []
+
+all_features = boston.data
+all_features_target = boston.target
+
+all_features_train, all_features_test, all_features_target_train, all_features_target_test = train_test_split(
+    all_features, all_features_target, train_size=0.1)
+
+print(len(all_features_target_train))
+
 for idx, name in enumerate(features):
     print(name)
-    boston_x = boston.data[:, idx]
-    boston_x = boston_x[:, np.newaxis]
 
-    boston_x_train, boston_x_test, boston_y_train, boston_y_test = \
-        train_test_split(boston_x, boston.target, train_size=0.1)
-    print("boston_x_train size ",len(boston_x_train))
+    boston_x_train = all_features_train[:, idx]
+    boston_x_train = boston_x_train.reshape(-1, 1)
+
+    boston_x_test = all_features_test[:, idx]
+    boston_x_test = boston_x_test.reshape(-1, 1)
+
+    boston_y_train = all_features_target_train
+    boston_y_test = all_features_target_test
+
+    print("boston_x_train size ", len(boston_x_train))
     print("boston_x_test size", len(boston_x_test))
     plt.figure(idx)
     plt.subplot('221')
@@ -87,16 +101,12 @@ for idx, name in enumerate(features):
     print('r2: %.2f' % r_squared)
     r_squared_list.append(r_squared)
 
-print('r_quared for separate ', r_squared_list)
+print('r_squared for separate features: ', r_squared_list)
 print('-----------------')
 from sklearn.metrics import mean_squared_error, r2_score
 
 # regression trained with all features
-all_features = boston.data
-all_features_target = boston.target
 
-all_features_train, all_features_test, all_features_target_train, all_features_target_test = train_test_split(
-    all_features, all_features_target, train_size=0.1)
 
 linear_regression_model = linear_model.LinearRegression()
 linear_regression_model.fit(all_features_train, all_features_target_train)
